@@ -1,0 +1,7 @@
+C:\Users\Kids\mygit\TCPNetworking\TCPNetworkingClient\bin\Debug\TCPNetworkingClient.exe.config
+C:\Users\Kids\mygit\TCPNetworking\TCPNetworkingClient\bin\Debug\TCPNetworkingClient.exe
+C:\Users\Kids\mygit\TCPNetworking\TCPNetworkingClient\bin\Debug\TCPNetworkingClient.pdb
+C:\Users\Kids\mygit\TCPNetworking\TCPNetworkingClient\obj\Debug\TCPNetworkingClient.csprojAssemblyReference.cache
+C:\Users\Kids\mygit\TCPNetworking\TCPNetworkingClient\obj\Debug\TCPNetworkingClient.csproj.CoreCompileInputs.cache
+C:\Users\Kids\mygit\TCPNetworking\TCPNetworkingClient\obj\Debug\TCPNetworkingClient.exe
+C:\Users\Kids\mygit\TCPNetworking\TCPNetworkingClient\obj\Debug\TCPNetworkingClient.pdb

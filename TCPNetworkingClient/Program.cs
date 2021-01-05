@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TCPNetworkingServer
+namespace TCPNetworkingClient
 {
     class Program
     {
         static void Main(string[] args)
         {
-            Server.Start(50, 26950);
+            Client c = new Client();
+            c.tcp.Connect();
             Console.ReadKey();
         }
     }
