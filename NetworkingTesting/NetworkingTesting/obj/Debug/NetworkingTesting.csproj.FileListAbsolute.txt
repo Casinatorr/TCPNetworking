@@ -1,6 +1,0 @@
-C:\Users\Kids\source\repos\NetworkingTesting\NetworkingTesting\bin\Debug\NetworkingTesting.exe.config
-C:\Users\Kids\source\repos\NetworkingTesting\NetworkingTesting\bin\Debug\NetworkingTesting.exe
-C:\Users\Kids\source\repos\NetworkingTesting\NetworkingTesting\bin\Debug\NetworkingTesting.pdb
-C:\Users\Kids\source\repos\NetworkingTesting\NetworkingTesting\obj\Debug\NetworkingTesting.csprojAssemblyReference.cache
-C:\Users\Kids\source\repos\NetworkingTesting\NetworkingTesting\obj\Debug\NetworkingTesting.exe
-C:\Users\Kids\source\repos\NetworkingTesting\NetworkingTesting\obj\Debug\NetworkingTesting.pdb

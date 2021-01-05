@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("NetworkingTesting")]
+[assembly: AssemblyTitle("TCPNetworkingServer")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("NetworkingTesting")]
+[assembly: AssemblyProduct("TCPNetworkingServer")]
 [assembly: AssemblyCopyright("Copyright ©  2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("d12d5289-7747-400c-ae84-ae030ca379da")]
+[assembly: Guid("a23dc89f-649f-4540-a139-60ff6059de99")]
 
 // Version information for an assembly consists of the following four values:
 //

@@ -4,14 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NetworkingTesting
+namespace TCPNetworkingServer
 {
     class Program
     {
         static void Main(string[] args)
         {
-            Server.Start(50, 26950);
-            Console.ReadKey();
         }
     }
 }
