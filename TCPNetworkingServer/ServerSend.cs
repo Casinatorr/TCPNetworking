@@ -70,5 +70,14 @@ namespace TCPNetworkingServer
                 SendTCPDataToAll(exceptClient, p);
             }
         }
+
+        public static void SendLogin(int loginClient)
+        {
+            using (Packet p = new Packet((int) ServerPackets.sendLogin))
+            {
+                p.Write($"{Server.clients[loginClient].username} logged in!");
+                SendTCPDataToAll(p);
+            }
+        }
     }
 }

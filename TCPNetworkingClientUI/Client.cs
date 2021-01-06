@@ -12,9 +12,10 @@ namespace TCPNetworkingClientUI
     {
         public static Client instance;
         public static int dataBufferSize = 4096;
+        private bool isConnected = false;
 
-        public string ip = "127.0.0.1";
-        public int port = 26950;
+        public string ip = "4.tcp.ngrok.io";
+        public int port = 11079;
         public int myid = 0;
 
         public TCP tcp;
@@ -38,7 +39,7 @@ namespace TCPNetworkingClientUI
 
         public class TCP
         {
-            private TcpClient socket;
+            public TcpClient socket;
             private NetworkStream stream;
 
             private byte[] receiveBuffer;
@@ -46,6 +47,7 @@ namespace TCPNetworkingClientUI
 
             public void Connect()
             {
+                instance.isConnected = true;
                 socket = new TcpClient
                 {
                     ReceiveBufferSize = dataBufferSize,
@@ -94,11 +96,16 @@ namespace TCPNetworkingClientUI
 
             private void ReceiveCallback(IAsyncResult result)
             {
+                if (!instance.isConnected)
+                    return;
                 try
                 {
                     int byteLength = stream.EndRead(result);
                     if (byteLength < 0)
+                    {
+                        instance.Disconnect(); 
                         return;
+                    }
 
                     byte[] data = new byte[byteLength];
                     Array.Copy(receiveBuffer, data, byteLength);
@@ -109,7 +116,18 @@ namespace TCPNetworkingClientUI
                 catch (Exception ex)
                 {
                     Console.WriteLine($"Error receiving TCP Data: {ex}");
+                    Disconnect();
                 }
+            }
+
+            private void Disconnect()
+            {
+                instance.Disconnect();
+
+                stream = null;
+                receivedData = null;
+                receiveBuffer = null;
+                socket = null;
             }
 
             private bool HandleData(byte[] _data)
@@ -164,9 +182,23 @@ namespace TCPNetworkingClientUI
             packetHandlers = new Dictionary<int, PacketHandler>()
         {
             {(int)ServerPackets.init, ClientHandle.ReceiveInit },
-            {(int)ServerPackets.stringReceived, ClientHandle.ReceiveString}
+            {(int)ServerPackets.stringReceived, ClientHandle.ReceiveString},
+            {(int)ServerPackets.loginReceived, ClientHandle.ReceiveLogin},
+            {(int)ServerPackets.ping, ClientHandle.Ping }
         };
             Console.WriteLine("Initialized packets.");
+        }
+
+
+        public void Disconnect()
+        {
+            if (isConnected)
+            {
+                isConnected = false;
+                tcp.socket.Close();
+
+                Console.WriteLine("Disconnected from server.");
+            }
         }
     }
 

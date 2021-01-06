@@ -24,5 +24,16 @@ namespace TCPNetworkingClientUI
             Console.WriteLine(msg);
             onReceive(msg);
         }
+
+        public static void ReceiveLogin(Packet packet)
+        {
+            string msg = packet.ReadString();
+            Console.WriteLine(msg);
+            onReceive(msg);
+        }
+
+        public static void Ping(Packet packet)
+        {
+        }
     }
 }

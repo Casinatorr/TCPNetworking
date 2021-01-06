@@ -8,7 +8,9 @@ namespace TCPNetworkingClientUI
     public enum ServerPackets
     {
         init = 1,
-        stringReceived = 2
+        stringReceived = 2,
+        loginReceived,
+        ping
     }
 
     /// <summary>Sent from client to server.</summary>

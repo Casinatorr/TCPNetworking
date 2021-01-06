@@ -39,6 +39,8 @@ namespace TCPNetworkingClientUI
             this.Username = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.Message = new System.Windows.Forms.Label();
+            this.UserInput = new System.Windows.Forms.TextBox();
+            this.Messages = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // IP
@@ -75,9 +77,9 @@ namespace TCPNetworkingClientUI
             // 
             // ConnectButton
             // 
-            this.ConnectButton.Location = new System.Drawing.Point(121, 145);
+            this.ConnectButton.Location = new System.Drawing.Point(107, 145);
             this.ConnectButton.Name = "ConnectButton";
-            this.ConnectButton.Size = new System.Drawing.Size(100, 38);
+            this.ConnectButton.Size = new System.Drawing.Size(126, 38);
             this.ConnectButton.TabIndex = 5;
             this.ConnectButton.Text = "Connect";
             this.ConnectButton.UseVisualStyleBackColor = true;
@@ -124,11 +126,31 @@ namespace TCPNetworkingClientUI
             this.Message.Size = new System.Drawing.Size(0, 30);
             this.Message.TabIndex = 10;
             // 
+            // UserInput
+            // 
+            this.UserInput.Location = new System.Drawing.Point(447, 408);
+            this.UserInput.Name = "UserInput";
+            this.UserInput.Size = new System.Drawing.Size(260, 35);
+            this.UserInput.TabIndex = 12;
+            // 
+            // Messages
+            // 
+            this.Messages.AcceptsReturn = true;
+            this.Messages.Location = new System.Drawing.Point(447, 27);
+            this.Messages.Multiline = true;
+            this.Messages.Name = "Messages";
+            this.Messages.ReadOnly = true;
+            this.Messages.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.Messages.Size = new System.Drawing.Size(337, 350);
+            this.Messages.TabIndex = 13;
+            // 
             // ChatUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 30F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(877, 514);
+            this.Controls.Add(this.Messages);
+            this.Controls.Add(this.UserInput);
             this.Controls.Add(this.Message);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.Username);
@@ -160,5 +182,7 @@ namespace TCPNetworkingClientUI
         private System.Windows.Forms.TextBox Username;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label Message;
+        private System.Windows.Forms.TextBox UserInput;
+        private System.Windows.Forms.TextBox Messages;
     }
 }

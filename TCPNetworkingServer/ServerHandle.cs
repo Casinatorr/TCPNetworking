@@ -15,6 +15,7 @@ namespace TCPNetworkingServer
             Server.clients[fromClient].username = clientUsername;
 
             Console.WriteLine($"Client {fromClient} answered init call with Username: {clientUsername}");
+            ServerSend.SendLogin(fromClient);
 
             if(clientCheck != fromClient)
             {

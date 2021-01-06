@@ -8,7 +8,9 @@ namespace TCPNetworkingServer
     public enum ServerPackets
     {
         sendInit = 1,
-        sendString = 2
+        sendString = 2,
+        sendLogin = 3,
+        ping
     }
 
     /// <summary>Sent from client to server.</summary>

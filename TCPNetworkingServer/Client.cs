@@ -74,6 +74,7 @@ namespace TCPNetworkingServer
                     int byteLength = stream.EndRead(result);
                     if(byteLength < 0)
                     {
+                        Server.clients[id].Disconnect();
                         return;
                     }
 
@@ -85,7 +86,7 @@ namespace TCPNetworkingServer
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error receiving TCP Data: {ex}");
+                    Server.clients[id].Disconnect();
                 }
             }
 
@@ -133,6 +134,24 @@ namespace TCPNetworkingServer
 
                 return false;
             }
+
+            public void Disconnect()
+            {
+                socket.Close();
+                stream = null;
+                receivedData = null;
+                receiveBuffer = null;
+                socket = null;
+            }
+        }
+
+        private void Disconnect()
+        {
+            Console.WriteLine($"{tcp.socket.Client.RemoteEndPoint} has disconnected");
+
+            tcp.Disconnect();
+            Server.clients[id] = new Client(id);
+
         }
     }
     

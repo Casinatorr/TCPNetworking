@@ -11,7 +11,8 @@ namespace TCPNetworkingClientUI
         private static Regex nums = new Regex("^[0-9]+$");
         private bool Connected = false;
         public static string username;
-        public ChatUI()
+        public static ChatUI instance;
+        public ChatUI(Save lastSave)
         {
             InitializeComponent();
             PortError.Hide();
@@ -27,14 +28,31 @@ namespace TCPNetworkingClientUI
             Client.onConnect += onConnect;
 
             ClientHandle.onReceive += onReceive;
+            instance = this;
+            LoadSave(lastSave);
         }
 
+        private void LoadSave(Save s)
+        {
+            IP.Text = s.adress;
+            Port.Text = s.port;
+            Username.Text = s.Username;
+        }
+
+        public Save getSave()
+        {
+            Save s = new Save();
+            s.adress = IP.Text;
+            s.port = Port.Text;
+            s.Username = Username.Text;
+            return s;
+        }
 
         private void onReceive(string msg)
         {
             Message.Invoke(new Action(() => 
             {
-                Message.Text = msg;
+                Messages.Text += $"\n{msg}";
             }));
         }
 
@@ -51,8 +69,14 @@ namespace TCPNetworkingClientUI
 
         private void Send(object sender, EventArgs e)
         {
-            if (Connected)
-                ClientSend.SendString("If this works imma be real happy");
+            if (Connected && !string.IsNullOrWhiteSpace(UserInput.Text))
+            {
+                ClientSend.SendString(UserInput.Text);
+                Messages.Text += $"(You) {UserInput.Text}" + Environment.NewLine;
+            } else
+            {
+                Messages.Text += $"(You) {UserInput.Text}" + Environment.NewLine;
+            }
         }
 
         private void Connect(object sender, EventArgs e)
@@ -80,9 +104,21 @@ namespace TCPNetworkingClientUI
             Console.WriteLine(valid);
             if (!valid) return;
 
-            UseWaitCursor = true;
-            username = Username.Text;
-            Client.instance.tcp.Connect();
+
+            if (!Connected)
+            {
+                UseWaitCursor = true;
+                username = Username.Text;
+                Client.instance.ip = IP.Text;
+                Client.instance.port = Int32.Parse(Port.Text);
+                Client.instance.tcp.Connect();
+                ConnectButton.Text = "Disconnect";
+            } else
+            {
+                Client.instance.Disconnect();
+                Connected = false;
+                ConnectButton.Text = "Connect";
+            }
         }
 
         private void onConnect(bool success)
