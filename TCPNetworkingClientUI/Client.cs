@@ -26,6 +26,8 @@ namespace TCPNetworkingClientUI
         private delegate void PacketHandler(Packet _packet);
         private static Dictionary<int, PacketHandler> packetHandlers;
 
+        public static Action onDisconnect;
+
         public Client()
         {
             instance = this;
@@ -200,7 +202,7 @@ namespace TCPNetworkingClientUI
             {
                 isConnected = false;
                 tcp.socket.Close();
-
+                onDisconnect();
                 Console.WriteLine("Disconnected from server.");
             }
         }

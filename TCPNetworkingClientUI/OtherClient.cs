@@ -10,6 +10,9 @@ namespace TCPNetworkingClientUI
     class OtherClient
     {
         public static Dictionary<int, OtherClient> otherClients = new Dictionary<int, OtherClient>();
+        public static Dictionary<string, OtherClient> otherClientsUsername = new Dictionary<string, OtherClient>();
+        public static Action<string> onDisconnect;
+        public static Action<string> onLogin;
 
         public string username;
         public int id;
@@ -20,6 +23,8 @@ namespace TCPNetworkingClientUI
             this.id = id;
             this.username = username;
             otherClients.Add(id, this);
+            otherClientsUsername.Add(username, this);
+            onLogin(username);
         }
         public static void init(string username, int id)
         {
@@ -29,6 +34,7 @@ namespace TCPNetworkingClientUI
         public void Disconnect()
         {
             otherClients.Remove(id);
+            onDisconnect(username);
         }
     }
 }

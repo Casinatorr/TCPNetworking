@@ -42,7 +42,9 @@ namespace TCPNetworkingClientUI
             this.UserInput = new System.Windows.Forms.TextBox();
             this.Messages = new System.Windows.Forms.TextBox();
             this.TestPicture = new System.Windows.Forms.PictureBox();
-            this.ProfiePic = new System.Windows.Forms.CheckBox();
+            this.Connections = new System.Windows.Forms.ListBox();
+            this.ProfilePictureBrowse = new System.Windows.Forms.Button();
+            this.UseProfile = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.TestPicture)).BeginInit();
             this.SuspendLayout();
             // 
@@ -155,22 +157,44 @@ namespace TCPNetworkingClientUI
             this.TestPicture.TabIndex = 14;
             this.TestPicture.TabStop = false;
             // 
-            // ProfiePic
+            // Connections
             // 
-            this.ProfiePic.AutoSize = true;
-            this.ProfiePic.Location = new System.Drawing.Point(103, 437);
-            this.ProfiePic.Name = "ProfiePic";
-            this.ProfiePic.Size = new System.Drawing.Size(91, 34);
-            this.ProfiePic.TabIndex = 15;
-            this.ProfiePic.Text = "Profile";
-            this.ProfiePic.UseVisualStyleBackColor = true;
+            this.Connections.FormattingEnabled = true;
+            this.Connections.ItemHeight = 30;
+            this.Connections.Location = new System.Drawing.Point(295, 248);
+            this.Connections.Name = "Connections";
+            this.Connections.Size = new System.Drawing.Size(120, 154);
+            this.Connections.TabIndex = 16;
+            // 
+            // ProfilePictureBrowse
+            // 
+            this.ProfilePictureBrowse.Location = new System.Drawing.Point(109, 420);
+            this.ProfilePictureBrowse.Name = "ProfilePictureBrowse";
+            this.ProfilePictureBrowse.Size = new System.Drawing.Size(112, 43);
+            this.ProfilePictureBrowse.TabIndex = 17;
+            this.ProfilePictureBrowse.Text = "Browse";
+            this.ProfilePictureBrowse.UseVisualStyleBackColor = true;
+            // 
+            // UseProfile
+            // 
+            this.UseProfile.AutoSize = true;
+            this.UseProfile.Checked = true;
+            this.UseProfile.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.UseProfile.Location = new System.Drawing.Point(109, 469);
+            this.UseProfile.Name = "UseProfile";
+            this.UseProfile.Size = new System.Drawing.Size(100, 34);
+            this.UseProfile.TabIndex = 18;
+            this.UseProfile.Text = "Default";
+            this.UseProfile.UseVisualStyleBackColor = true;
             // 
             // ChatUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 30F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(877, 514);
-            this.Controls.Add(this.ProfiePic);
+            this.Controls.Add(this.UseProfile);
+            this.Controls.Add(this.ProfilePictureBrowse);
+            this.Controls.Add(this.Connections);
             this.Controls.Add(this.TestPicture);
             this.Controls.Add(this.Messages);
             this.Controls.Add(this.UserInput);
@@ -209,6 +233,8 @@ namespace TCPNetworkingClientUI
         private System.Windows.Forms.TextBox UserInput;
         private System.Windows.Forms.TextBox Messages;
         private System.Windows.Forms.PictureBox TestPicture;
-        private System.Windows.Forms.CheckBox ProfiePic;
+        private System.Windows.Forms.ListBox Connections;
+        private System.Windows.Forms.Button ProfilePictureBrowse;
+        private System.Windows.Forms.CheckBox UseProfile;
     }
 }
