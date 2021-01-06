@@ -7,13 +7,15 @@ namespace TCPNetworkingServer
     /// <summary>Sent from server to client.</summary>
     public enum ServerPackets
     {
-        sendInit = 1
+        sendInit = 1,
+        sendString = 2
     }
 
     /// <summary>Sent from client to server.</summary>
     public enum ClientPackets
     {
-        initReceived = 1
+        initReceived = 1,
+        stringReceived
     }
 
     public class Packet:IDisposable

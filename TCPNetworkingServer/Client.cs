@@ -13,6 +13,7 @@ namespace TCPNetworkingServer
     {
         public TCP tcp;
         public int id;
+        public string username;
         public static int dataBufferSize = 4096;
 
         public Client(int _id)

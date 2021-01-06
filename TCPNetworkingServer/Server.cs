@@ -61,14 +61,15 @@ namespace TCPNetworkingServer
 
         private static void InitializeServerData()
         {
-            for(int i = 0; i < MaxClients; i++)
+            for(int i = 0; i <= MaxClients; i++)
             {
                 clients.Add(i, new Client(i));
             }
 
             packetHandlers = new Dictionary<int, PacketHandler>()
             {
-                {(int)ClientPackets.initReceived, ServerHandle.InitReceived }
+                {(int)ClientPackets.initReceived, ServerHandle.InitReceived },
+                {(int)ClientPackets.stringReceived, ServerHandle.StringReceived }
             };
 
             Console.WriteLine("Initialized Packets");

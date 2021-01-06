@@ -14,6 +14,25 @@ namespace TCPNetworkingServer
             Server.clients[toClient].tcp.SendData(packet);
         }
 
+        private static void SendTCPDataToAll(Packet packet)
+        {
+            packet.WriteLength();
+            for (int i = 1; i <= Server.MaxClients; i++)
+            {
+                Server.clients[i].tcp.SendData(packet);
+            }
+        }
+
+        private static void SendTCPDataToAll(int exceptClient, Packet packet)
+        {
+            packet.WriteLength();
+            for (int i = 1; i <= Server.MaxClients; i++)
+            {
+                if (i == exceptClient) continue;
+                Server.clients[i].tcp.SendData(packet);
+            }
+        }
+
         public static void SendInit(int toClient)
         {
             using (Packet p = new Packet((int) ServerPackets.sendInit))
@@ -22,6 +41,33 @@ namespace TCPNetworkingServer
 
                 SendTCPData(toClient, p);
                 Console.WriteLine("Sent init packet");
+            }
+        }
+
+        public static void SendString(int toClient, string msg)
+        {
+            using (Packet p = new Packet((int) ServerPackets.sendString))
+            {
+                p.Write(msg);
+                SendTCPData(toClient, p);
+            }
+        }
+
+        public static void SendString(string msg, bool all)
+        {
+            using (Packet p = new Packet((int) ServerPackets.sendString))
+            {
+                p.Write(msg);
+                SendTCPDataToAll(p);
+            }
+        }
+
+        public static void SendString(string msg, int exceptClient)
+        {
+            using (Packet p = new Packet((int) ServerPackets.sendString))
+            {
+                p.Write(msg);
+                SendTCPDataToAll(exceptClient, p);
             }
         }
     }

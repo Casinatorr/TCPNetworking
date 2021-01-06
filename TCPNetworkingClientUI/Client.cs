@@ -13,8 +13,8 @@ namespace TCPNetworkingClientUI
         public static Client instance;
         public static int dataBufferSize = 4096;
 
-        public string ip = "4.tcp.ngrok.io";
-        public int port = 19617;
+        public string ip = "127.0.0.1";
+        public int port = 26950;
         public int myid = 0;
 
         public TCP tcp;
@@ -163,7 +163,8 @@ namespace TCPNetworkingClientUI
         {
             packetHandlers = new Dictionary<int, PacketHandler>()
         {
-            {(int)ServerPackets.init, ClientHandle.ReceiveInit }
+            {(int)ServerPackets.init, ClientHandle.ReceiveInit },
+            {(int)ServerPackets.stringReceived, ClientHandle.ReceiveString}
         };
             Console.WriteLine("Initialized packets.");
         }

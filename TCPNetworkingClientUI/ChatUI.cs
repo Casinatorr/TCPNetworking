@@ -9,6 +9,8 @@ namespace TCPNetworkingClientUI
     public partial class ChatUI:Form
     {
         private static Regex nums = new Regex("^[0-9]+$");
+        private bool Connected = false;
+        public static string username;
         public ChatUI()
         {
             InitializeComponent();
@@ -17,11 +19,23 @@ namespace TCPNetworkingClientUI
             IP.Click += ColorChange;
             Port.Click += ColorChange;
             ConnectButton.Click += Connect;
+            SendButton.Click += Send;
 
             Port.KeyPress += new KeyPressEventHandler(AllowOnlyNums);
 
 
             Client.onConnect += onConnect;
+
+            ClientHandle.onReceive += onReceive;
+        }
+
+
+        private void onReceive(string msg)
+        {
+            Message.Invoke(new Action(() => 
+            {
+                Message.Text = msg;
+            }));
         }
 
         private void AllowOnlyNums(object sender, KeyPressEventArgs e)
@@ -33,6 +47,12 @@ namespace TCPNetworkingClientUI
                 e.Handled = true;
             if (Port.TextLength + 1 > 5)
                 e.Handled = true;
+        }
+
+        private void Send(object sender, EventArgs e)
+        {
+            if (Connected)
+                ClientSend.SendString("If this works imma be real happy");
         }
 
         private void Connect(object sender, EventArgs e)
@@ -61,14 +81,14 @@ namespace TCPNetworkingClientUI
             if (!valid) return;
 
             UseWaitCursor = true;
-            Client.instance.ip = IP.Text;
-            Client.instance.port = Int32.Parse(Port.Text);
+            username = Username.Text;
             Client.instance.tcp.Connect();
         }
 
         private void onConnect(bool success)
         {
             UseWaitCursor = false;
+            Connected = success;
         }
 
 

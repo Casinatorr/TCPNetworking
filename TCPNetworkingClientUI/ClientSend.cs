@@ -19,6 +19,16 @@ namespace TCPNetworkingClientUI
             using(Packet p = new Packet((int) ClientPackets.initReceived))
             {
                 p.Write(Client.instance.myid);
+                p.Write(ChatUI.username);
+                SendTCPData(p);
+            }
+        }
+
+        public static void SendString(string msg)
+        {
+            using (Packet p = new Packet((int) ClientPackets.sendString))
+            {
+                p.Write(msg);
                 SendTCPData(p);
             }
         }
