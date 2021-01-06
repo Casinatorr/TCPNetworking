@@ -1,0 +1,10 @@
+C:\Users\Kids\mygit\TCPNetworking\TCPNetworkingClientUI\bin\Debug\TCPNetworkingClientUI.exe.config
+C:\Users\Kids\mygit\TCPNetworking\TCPNetworkingClientUI\bin\Debug\TCPNetworkingClientUI.exe
+C:\Users\Kids\mygit\TCPNetworking\TCPNetworkingClientUI\bin\Debug\TCPNetworkingClientUI.pdb
+C:\Users\Kids\mygit\TCPNetworking\TCPNetworkingClientUI\obj\Debug\TCPNetworkingClientUI.csprojAssemblyReference.cache
+C:\Users\Kids\mygit\TCPNetworking\TCPNetworkingClientUI\obj\Debug\TCPNetworkingClientUI.ChatUI.resources
+C:\Users\Kids\mygit\TCPNetworking\TCPNetworkingClientUI\obj\Debug\TCPNetworkingClientUI.Properties.Resources.resources
+C:\Users\Kids\mygit\TCPNetworking\TCPNetworkingClientUI\obj\Debug\TCPNetworkingClientUI.csproj.GenerateResource.cache
+C:\Users\Kids\mygit\TCPNetworking\TCPNetworkingClientUI\obj\Debug\TCPNetworkingClientUI.csproj.CoreCompileInputs.cache
+C:\Users\Kids\mygit\TCPNetworking\TCPNetworkingClientUI\obj\Debug\TCPNetworkingClientUI.exe
+C:\Users\Kids\mygit\TCPNetworking\TCPNetworkingClientUI\obj\Debug\TCPNetworkingClientUI.pdb

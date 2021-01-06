@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30804.86
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCPNetworkingClientUI", "TCPNetworkingClientUI.csproj", "{2EC1D1AA-6878-4106-91CB-273A0424DE38}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2EC1D1AA-6878-4106-91CB-273A0424DE38}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2EC1D1AA-6878-4106-91CB-273A0424DE38}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2EC1D1AA-6878-4106-91CB-273A0424DE38}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2EC1D1AA-6878-4106-91CB-273A0424DE38}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {926B2282-5DC5-4CD8-BCB6-07F209E38788}
+	EndGlobalSection
+EndGlobal

@@ -6,63 +6,89 @@ using System.Threading.Tasks;
 using System.Net;
 using System.Net.Sockets;
 
-
-namespace TCPNetworkingServer
+namespace TCPNetworkingClientUI
 {
     class Client
     {
-        public TCP tcp;
-        public int id;
+        public static Client instance;
         public static int dataBufferSize = 4096;
 
-        public Client(int _id)
+        public string ip = "4.tcp.ngrok.io";
+        public int port = 19617;
+        public int myid = 0;
+
+        public TCP tcp;
+
+        public static Action<bool> onConnect;
+
+        private delegate void PacketHandler(Packet _packet);
+        private static Dictionary<int, PacketHandler> packetHandlers;
+
+        public Client()
         {
-            id = _id;
-            tcp = new TCP(_id);
+            instance = this;
+            tcp = new TCP();
+            InitializeClientData();
+        }
+
+        public static void init()
+        {
+            Client c = new Client();
         }
 
         public class TCP
         {
-            public TcpClient socket;
-
-            private readonly int id;
+            private TcpClient socket;
             private NetworkStream stream;
+
             private byte[] receiveBuffer;
             private Packet receivedData;
 
-            public TCP(int _id)
+            public void Connect()
             {
-                id = _id;
-            }
-
-            public void Connect(TcpClient _socket)
-            {
-                socket = _socket;
-                socket.ReceiveBufferSize = dataBufferSize;
-                socket.SendBufferSize = dataBufferSize;
-
-                stream = socket.GetStream();
-
-                receivedData = new Packet();
+                socket = new TcpClient
+                {
+                    ReceiveBufferSize = dataBufferSize,
+                    SendBufferSize = dataBufferSize
+                };
 
                 receiveBuffer = new byte[dataBufferSize];
-                stream.BeginRead(receiveBuffer, 0, dataBufferSize, ReceiveCallback, null);
-
-                ServerSend.SendInit(id);
+                socket.BeginConnect(instance.ip, instance.port, ConnectCallback, null);
             }
 
             public void SendData(Packet packet)
             {
                 try
                 {
-                    if (socket != null)
+                    if(socket != null)
                     {
                         stream.BeginWrite(packet.ToArray(), 0, packet.Length(), null, null);
                     }
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error sending data to {id} via TCP: {ex}");
+                    Console.WriteLine($"Error sending data to server via TCP: {ex}");
+                }
+            }
+
+            private void ConnectCallback(IAsyncResult result)
+            {
+                try
+                {
+                    socket.EndConnect(result);
+                    if (!socket.Connected)
+                    {
+                        return;
+                    }
+                    stream = socket.GetStream();
+                    onConnect(true);
+
+                    receivedData = new Packet();
+                    stream.BeginRead(receiveBuffer, 0, dataBufferSize, ReceiveCallback, null);
+                }
+                catch
+                {
+                    onConnect(false);
                 }
             }
 
@@ -71,15 +97,13 @@ namespace TCPNetworkingServer
                 try
                 {
                     int byteLength = stream.EndRead(result);
-                    if(byteLength < 0)
-                    {
+                    if (byteLength < 0)
                         return;
-                    }
 
                     byte[] data = new byte[byteLength];
                     Array.Copy(receiveBuffer, data, byteLength);
-                    receivedData.Reset(HandleData(data));
 
+                    receivedData.Reset(HandleData(data));
                     stream.BeginRead(receiveBuffer, 0, dataBufferSize, ReceiveCallback, null);
                 }
                 catch (Exception ex)
@@ -110,7 +134,7 @@ namespace TCPNetworkingServer
                     using (Packet _packet = new Packet(_packetBytes))
                     {
                         int _packetId = _packet.ReadInt();
-                        Server.packetHandlers[_packetId](id, _packet);
+                        packetHandlers[_packetId](_packet);
                     }
 
                     _packetLength = 0;
@@ -132,7 +156,18 @@ namespace TCPNetworkingServer
 
                 return false;
             }
+
+
+        }
+        private void InitializeClientData()
+        {
+            packetHandlers = new Dictionary<int, PacketHandler>()
+        {
+            {(int)ServerPackets.init, ClientHandle.ReceiveInit }
+        };
+            Console.WriteLine("Initialized packets.");
         }
     }
-    
+
 }
+
