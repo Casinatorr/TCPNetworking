@@ -12,6 +12,8 @@ namespace TCPNetworkingClientUI
         private bool Connected = false;
         public static string username;
         public static ChatUI instance;
+
+        public static Image profilePicture = Image.FromFile(@"C:\Users\Kids\Pictures\Aimcross16.png");
         public ChatUI(Save lastSave)
         {
             InitializeComponent();
@@ -24,12 +26,14 @@ namespace TCPNetworkingClientUI
 
             Port.KeyPress += new KeyPressEventHandler(AllowOnlyNums);
 
-
             Client.onConnect += onConnect;
 
             ClientHandle.onReceive += onReceive;
+            ClientHandle.onImageReceive += onImageReceive;
             instance = this;
             LoadSave(lastSave);
+
+            
         }
 
         private void LoadSave(Save s)
@@ -48,11 +52,17 @@ namespace TCPNetworkingClientUI
             return s;
         }
 
-        private void onReceive(string msg)
+        public void onImageReceive(Image image)
+        {
+            TestPicture.Image = image;
+            TestPicture.SizeMode = PictureBoxSizeMode.Zoom;
+        }
+
+        public void onReceive(string msg)
         {
             Message.Invoke(new Action(() => 
             {
-                Messages.Text += $"\n{msg}";
+                Messages.Text += $"{msg}" + System.Environment.NewLine;
             }));
         }
 
@@ -72,10 +82,12 @@ namespace TCPNetworkingClientUI
             if (Connected && !string.IsNullOrWhiteSpace(UserInput.Text))
             {
                 ClientSend.SendString(UserInput.Text);
-                Messages.Text += $"(You) {UserInput.Text}" + Environment.NewLine;
+                Messages.Text += $"(You) {UserInput.Text}";
+                Messages.Text += System.Environment.NewLine;
             } else
             {
-                Messages.Text += $"(You) {UserInput.Text}" + Environment.NewLine;
+                Messages.Text += $"(You) {UserInput.Text}";
+                Messages.Text += System.Environment.NewLine;
             }
         }
 
@@ -111,6 +123,8 @@ namespace TCPNetworkingClientUI
                 username = Username.Text;
                 Client.instance.ip = IP.Text;
                 Client.instance.port = Int32.Parse(Port.Text);
+                Image otherProfilePicture = Image.FromFile(@"C:\Users\Kids\Pictures\AimcrossRed.png");
+                profilePicture = ProfiePic.Checked ? otherProfilePicture : profilePicture;
                 Client.instance.tcp.Connect();
                 ConnectButton.Text = "Disconnect";
             } else

@@ -150,6 +150,7 @@ namespace TCPNetworkingServer
             Console.WriteLine($"{tcp.socket.Client.RemoteEndPoint} has disconnected");
 
             tcp.Disconnect();
+            ServerSend.SendDisconnect(id);
             Server.clients[id] = new Client(id);
 
         }

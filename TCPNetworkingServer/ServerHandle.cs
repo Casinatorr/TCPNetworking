@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Drawing;
 
 namespace TCPNetworkingServer
 {
@@ -16,6 +17,8 @@ namespace TCPNetworkingServer
 
             Console.WriteLine($"Client {fromClient} answered init call with Username: {clientUsername}");
             ServerSend.SendLogin(fromClient);
+            ServerSend.SendAllLogins(fromClient);
+            ServerSend.SendOtherLogin(fromClient);
 
             if(clientCheck != fromClient)
             {
@@ -30,6 +33,12 @@ namespace TCPNetworkingServer
             Console.WriteLine($"{Server.clients[fromClient].username} ({fromClient}) sent: {msg}");
             Console.WriteLine("Passing on");
             ServerSend.SendString($"{Server.clients[fromClient].username}: {msg}", fromClient);
+        }
+
+
+        public static void ProfilePictureReceived(int fromClient, Packet packet)
+        {
+            ServerSend.SendProfilePicure(fromClient, packet);
         }
     }
 }

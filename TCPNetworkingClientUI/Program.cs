@@ -19,6 +19,7 @@ namespace TCPNetworkingClientUI
 
         static void Main()
         {
+            OtherClient.otherClients.Clear();
             Client.init();
 
             Application.EnableVisualStyles();

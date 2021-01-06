@@ -41,6 +41,9 @@ namespace TCPNetworkingClientUI
             this.Message = new System.Windows.Forms.Label();
             this.UserInput = new System.Windows.Forms.TextBox();
             this.Messages = new System.Windows.Forms.TextBox();
+            this.TestPicture = new System.Windows.Forms.PictureBox();
+            this.ProfiePic = new System.Windows.Forms.CheckBox();
+            ((System.ComponentModel.ISupportInitialize)(this.TestPicture)).BeginInit();
             this.SuspendLayout();
             // 
             // IP
@@ -87,7 +90,7 @@ namespace TCPNetworkingClientUI
             // PortError
             // 
             this.PortError.AutoSize = true;
-            this.PortError.Location = new System.Drawing.Point(244, 66);
+            this.PortError.Location = new System.Drawing.Point(227, 66);
             this.PortError.Name = "PortError";
             this.PortError.Size = new System.Drawing.Size(188, 30);
             this.PortError.TabIndex = 6;
@@ -136,7 +139,7 @@ namespace TCPNetworkingClientUI
             // Messages
             // 
             this.Messages.AcceptsReturn = true;
-            this.Messages.Location = new System.Drawing.Point(447, 27);
+            this.Messages.Location = new System.Drawing.Point(447, 14);
             this.Messages.Multiline = true;
             this.Messages.Name = "Messages";
             this.Messages.ReadOnly = true;
@@ -144,11 +147,31 @@ namespace TCPNetworkingClientUI
             this.Messages.Size = new System.Drawing.Size(337, 350);
             this.Messages.TabIndex = 13;
             // 
+            // TestPicture
+            // 
+            this.TestPicture.Location = new System.Drawing.Point(80, 248);
+            this.TestPicture.Name = "TestPicture";
+            this.TestPicture.Size = new System.Drawing.Size(168, 166);
+            this.TestPicture.TabIndex = 14;
+            this.TestPicture.TabStop = false;
+            // 
+            // ProfiePic
+            // 
+            this.ProfiePic.AutoSize = true;
+            this.ProfiePic.Location = new System.Drawing.Point(103, 437);
+            this.ProfiePic.Name = "ProfiePic";
+            this.ProfiePic.Size = new System.Drawing.Size(91, 34);
+            this.ProfiePic.TabIndex = 15;
+            this.ProfiePic.Text = "Profile";
+            this.ProfiePic.UseVisualStyleBackColor = true;
+            // 
             // ChatUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 30F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(877, 514);
+            this.Controls.Add(this.ProfiePic);
+            this.Controls.Add(this.TestPicture);
             this.Controls.Add(this.Messages);
             this.Controls.Add(this.UserInput);
             this.Controls.Add(this.Message);
@@ -165,6 +188,7 @@ namespace TCPNetworkingClientUI
             this.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
             this.Name = "ChatUI";
             this.Text = "ChatUI";
+            ((System.ComponentModel.ISupportInitialize)(this.TestPicture)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -184,5 +208,7 @@ namespace TCPNetworkingClientUI
         private System.Windows.Forms.Label Message;
         private System.Windows.Forms.TextBox UserInput;
         private System.Windows.Forms.TextBox Messages;
+        private System.Windows.Forms.PictureBox TestPicture;
+        private System.Windows.Forms.CheckBox ProfiePic;
     }
 }

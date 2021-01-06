@@ -9,15 +9,19 @@ namespace TCPNetworkingClientUI
     {
         init = 1,
         stringReceived = 2,
-        loginReceived,
-        ping
+        loginReceived = 3,
+        ping = 4,
+        profilePictureReceived = 5,
+        otherLoginReceived = 6,
+        DisconnectReceived = 7
     }
 
     /// <summary>Sent from client to server.</summary>
     public enum ClientPackets
     {
         initReceived = 1,
-        sendString = 2
+        sendString = 2,
+        profilePictureSend = 3
     }
 
     public class Packet:IDisposable

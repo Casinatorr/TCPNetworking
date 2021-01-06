@@ -10,14 +10,18 @@ namespace TCPNetworkingServer
         sendInit = 1,
         sendString = 2,
         sendLogin = 3,
-        ping
+        ping = 4,
+        profilePicture = 5,
+        sendOtherLogin = 6,
+        Disconnect = 7
     }
 
     /// <summary>Sent from client to server.</summary>
     public enum ClientPackets
     {
         initReceived = 1,
-        stringReceived
+        stringReceived = 2,
+        profilePictureReceived = 3
     }
 
     public class Packet:IDisposable

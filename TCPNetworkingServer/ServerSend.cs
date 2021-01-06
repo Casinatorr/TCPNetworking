@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Drawing;
 
 namespace TCPNetworkingServer
 {
@@ -77,6 +78,52 @@ namespace TCPNetworkingServer
             {
                 p.Write($"{Server.clients[loginClient].username} logged in!");
                 SendTCPDataToAll(p);
+            }
+        }
+
+        public static void SendOtherLogin(int loginClient)
+        {
+            using (Packet p = new Packet((int) ServerPackets.sendOtherLogin))
+            {
+                Console.WriteLine(loginClient);
+                p.Write(loginClient);
+                p.Write(Server.clients[loginClient].username);
+                SendTCPDataToAll(loginClient, p);
+            }
+        }
+
+        public static void SendAllLogins(int toClient)
+        {
+            for(int i = 1; i <= Server.MaxClients; i++)
+            {
+                if (i == toClient) continue;
+                if (Server.clients[i].tcp.socket == null) continue;
+                using (Packet p = new Packet((int) ServerPackets.sendOtherLogin))
+                {
+                    p.Write(i);
+                    p.Write(Server.clients[i].username);
+                    SendTCPData(toClient, p);
+                }
+            }
+        }
+
+        public static void SendProfilePicure(int fromClient, Packet packet)
+        {
+            using (Packet p = new Packet((int) ServerPackets.profilePicture))
+            {
+                packet.ReadInt();
+                p.Write(fromClient);
+                p.Write(packet.ReadBytes(packet.UnreadLength()));
+                SendTCPDataToAll(fromClient, p);
+            }
+        }
+
+        public static void SendDisconnect(int client)
+        {
+            using(Packet p = new Packet((int) ServerPackets.Disconnect))
+            {
+                p.Write(client);
+                SendTCPDataToAll(client, p);
             }
         }
     }

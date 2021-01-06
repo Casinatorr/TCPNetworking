@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net;
 using System.Net.Sockets;
+using System.Drawing;
 
 namespace TCPNetworkingClientUI
 {
@@ -184,7 +185,10 @@ namespace TCPNetworkingClientUI
             {(int)ServerPackets.init, ClientHandle.ReceiveInit },
             {(int)ServerPackets.stringReceived, ClientHandle.ReceiveString},
             {(int)ServerPackets.loginReceived, ClientHandle.ReceiveLogin},
-            {(int)ServerPackets.ping, ClientHandle.Ping }
+            {(int)ServerPackets.ping, ClientHandle.Ping },
+            {(int)ServerPackets.profilePictureReceived, ClientHandle.ProfilePictureReceived},
+            {(int)ServerPackets.otherLoginReceived, ClientHandle.OtherLoginReceived},
+            {(int)ServerPackets.DisconnectReceived, ClientHandle.DisconnectReceived}
         };
             Console.WriteLine("Initialized packets.");
         }

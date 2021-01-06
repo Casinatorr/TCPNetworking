@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net;
 using System.Net.Sockets;
+using System.Drawing;
+using System.IO;
 
 namespace TCPNetworkingServer
 {
@@ -24,6 +26,15 @@ namespace TCPNetworkingServer
 
         public delegate void PacketHandler(int _fromClient, Packet _packet);
         public static Dictionary<int, PacketHandler> packetHandlers;
+
+        public static byte[] ImageToByteArray(Image imageIn)
+        {
+            using (var ms = new MemoryStream())
+            {
+                imageIn.Save(ms, imageIn.RawFormat);
+                return ms.ToArray();
+            }
+        }
 
         public static void Start(int _maxPlayers, int _port)
         {
@@ -69,7 +80,8 @@ namespace TCPNetworkingServer
             packetHandlers = new Dictionary<int, PacketHandler>()
             {
                 {(int)ClientPackets.initReceived, ServerHandle.InitReceived },
-                {(int)ClientPackets.stringReceived, ServerHandle.StringReceived }
+                {(int)ClientPackets.stringReceived, ServerHandle.StringReceived },
+                {(int)ClientPackets.profilePictureReceived, ServerHandle.ProfilePictureReceived }
             };
 
             Console.WriteLine("Initialized Packets");

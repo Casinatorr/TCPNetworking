@@ -55,6 +55,7 @@
     <Compile Include="Client.cs" />
     <Compile Include="ClientHandle.cs" />
     <Compile Include="ClientSend.cs" />
+    <Compile Include="OtherClient.cs" />
     <Compile Include="Packet.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
