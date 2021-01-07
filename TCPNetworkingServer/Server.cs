@@ -79,9 +79,9 @@ namespace TCPNetworkingServer
 
             packetHandlers = new Dictionary<int, PacketHandler>()
             {
-                {(int)ClientPackets.initReceived, ServerHandle.InitReceived },
-                {(int)ClientPackets.stringReceived, ServerHandle.StringReceived },
-                {(int)ClientPackets.profilePictureReceived, ServerHandle.ProfilePictureReceived }
+                {(int)ClientPackets.initReceived, ServerHandle.ReceiveInit },
+                {(int)ClientPackets.messageReceived, ServerHandle.ReceiveMessage },
+                {(int)ClientPackets.privateMessageReceived, ServerHandle.ReceivePrivateMessage }
             };
 
             Console.WriteLine("Initialized Packets");

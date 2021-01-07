@@ -7,21 +7,20 @@ namespace TCPNetworkingServer
     /// <summary>Sent from server to client.</summary>
     public enum ServerPackets
     {
-        sendInit = 1,
-        sendString = 2,
-        sendLogin = 3,
-        ping = 4,
-        profilePicture = 5,
-        sendOtherLogin = 6,
-        Disconnect = 7
+        ping,
+        sendInit,
+        sendLogin,
+        sendMessage,
+        sendPrivateMessage,
+        disconnect
     }
 
     /// <summary>Sent from client to server.</summary>
     public enum ClientPackets
     {
-        initReceived = 1,
-        stringReceived = 2,
-        profilePictureReceived = 3
+        initReceived,
+        messageReceived,
+        privateMessageReceived
     }
 
     public class Packet:IDisposable

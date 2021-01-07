@@ -184,13 +184,12 @@ namespace TCPNetworkingClientUI
         {
             packetHandlers = new Dictionary<int, PacketHandler>()
         {
-            {(int)ServerPackets.init, ClientHandle.ReceiveInit },
-            {(int)ServerPackets.stringReceived, ClientHandle.ReceiveString},
-            {(int)ServerPackets.loginReceived, ClientHandle.ReceiveLogin},
-            {(int)ServerPackets.ping, ClientHandle.Ping },
-            {(int)ServerPackets.profilePictureReceived, ClientHandle.ProfilePictureReceived},
-            {(int)ServerPackets.otherLoginReceived, ClientHandle.OtherLoginReceived},
-            {(int)ServerPackets.DisconnectReceived, ClientHandle.DisconnectReceived}
+            {(int)ServerPackets.receivedInit, ClientHandle.ReceiveInit },
+            {(int)ServerPackets.receivedLogin, ClientHandle.ReceiveLogin },
+            {(int)ServerPackets.receivedDisconnect, ClientHandle.ReceiveDisconnect },
+            {(int)ServerPackets.receivedMessage, ClientHandle.ReceiveMessage },
+            {(int)ServerPackets.receivedPrivateMessage, ClientHandle.ReceivePrivateMessage },
+            {(int)ServerPackets.ping, ClientHandle.Ping }
         };
             Console.WriteLine("Initialized packets.");
         }

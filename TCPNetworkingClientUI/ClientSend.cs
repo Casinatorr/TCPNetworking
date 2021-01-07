@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -16,45 +17,35 @@ namespace TCPNetworkingClientUI
             Client.instance.tcp.SendData(packet);
         }
 
-        public static void InitReceived()
+        public static void SendInit()
         {
-            using(Packet p = new Packet((int) ClientPackets.initReceived))
+            using(Packet p = new Packet((int) ClientPackets.init))
             {
                 p.Write(Client.instance.myid);
                 p.Write(ChatUI.username);
                 SendTCPData(p);
             }
-            SendProfilePicture();
         }
 
-        public static void SendString(string msg)
+        public static void SendMessage(string msg)
         {
-            using (Packet p = new Packet((int) ClientPackets.sendString))
+            using(Packet p = new Packet((int) ClientPackets.sendMessage))
             {
                 p.Write(msg);
                 SendTCPData(p);
             }
         }
 
-        public static void SendProfilePicture()
+
+        public static void SendPrivateMessage(int toClient, string msg)
         {
-            using(Packet p = new Packet((int) ClientPackets.profilePictureSend))
+            using(Packet p = new Packet((int) ClientPackets.sendPrivateMessage))
             {
-                Console.WriteLine("Sending profile picture");
-                p.Write(Client.instance.myid);
-                byte[] imageData = ImageToByteArray(ChatUI.profilePicture);
-                p.Write(imageData);
+                p.Write(toClient);
+                p.Write(msg);
                 SendTCPData(p);
             }
         }
 
-        private static byte[] ImageToByteArray(Image imageIn)
-        {
-            using (var ms = new MemoryStream())
-            {
-                imageIn.Save(ms, imageIn.RawFormat);
-                return ms.ToArray();
-            }
-        }
     }
 }

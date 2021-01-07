@@ -39,92 +39,64 @@ namespace TCPNetworkingServer
             using (Packet p = new Packet((int) ServerPackets.sendInit))
             {
                 p.Write(toClient);
-
                 SendTCPData(toClient, p);
-                Console.WriteLine("Sent init packet");
-            }
-        }
-
-        public static void SendString(int toClient, string msg)
-        {
-            using (Packet p = new Packet((int) ServerPackets.sendString))
-            {
-                p.Write(msg);
-                SendTCPData(toClient, p);
-            }
-        }
-
-        public static void SendString(string msg, bool all)
-        {
-            using (Packet p = new Packet((int) ServerPackets.sendString))
-            {
-                p.Write(msg);
-                SendTCPDataToAll(p);
-            }
-        }
-
-        public static void SendString(string msg, int exceptClient)
-        {
-            using (Packet p = new Packet((int) ServerPackets.sendString))
-            {
-                p.Write(msg);
-                SendTCPDataToAll(exceptClient, p);
             }
         }
 
         public static void SendLogin(int loginClient)
         {
-            using (Packet p = new Packet((int) ServerPackets.sendLogin))
+            using(Packet p = new Packet((int) ServerPackets.sendLogin))
             {
-                p.Write($"{Server.clients[loginClient].username} logged in!");
-                SendTCPDataToAll(p);
-            }
-        }
-
-        public static void SendOtherLogin(int loginClient)
-        {
-            using (Packet p = new Packet((int) ServerPackets.sendOtherLogin))
-            {
-                Console.WriteLine(loginClient);
                 p.Write(loginClient);
                 p.Write(Server.clients[loginClient].username);
-                SendTCPDataToAll(loginClient, p);
+                p.Write(true);
+                SendTCPDataToAll(p);
             }
-        }
 
-        public static void SendAllLogins(int toClient)
-        {
-            for(int i = 1; i <= Server.MaxClients; i++)
+            //Sending the new client all other clients
+            for(int i = 1; i < Server.MaxClients; i++)
             {
-                if (i == toClient) continue;
                 if (Server.clients[i].tcp.socket == null) continue;
-                using (Packet p = new Packet((int) ServerPackets.sendOtherLogin))
+                if (i == loginClient) continue;
+                using(Packet p = new Packet((int) ServerPackets.sendLogin))
                 {
-                    p.Write(i);
+                    p.Write(Server.clients[i].id);
                     p.Write(Server.clients[i].username);
-                    SendTCPData(toClient, p);
+                    p.Write(false);
+                    SendTCPData(loginClient, p);
                 }
             }
         }
 
-        public static void SendProfilePicure(int fromClient, Packet packet)
+        public static void SendMessage(int fromClient, string msg)
         {
-            using (Packet p = new Packet((int) ServerPackets.profilePicture))
+            using(Packet p = new Packet((int) ServerPackets.sendMessage))
             {
-                packet.ReadInt();
                 p.Write(fromClient);
-                p.Write(packet.ReadBytes(packet.UnreadLength()));
+                p.Write(msg);
                 SendTCPDataToAll(fromClient, p);
             }
         }
 
         public static void SendDisconnect(int client)
         {
-            using(Packet p = new Packet((int) ServerPackets.Disconnect))
+            using(Packet p = new Packet((int) ServerPackets.disconnect))
             {
                 p.Write(client);
                 SendTCPDataToAll(client, p);
             }
         }
+
+        public static void SendPrivateMessage(int fromClient, int toClient, Packet packet)
+        {
+            using (Packet p = new Packet((int) ServerPackets.sendPrivateMessage))
+            {
+                p.Write(fromClient);
+                string msg = packet.ReadString();
+                p.Write(msg);
+                SendTCPData(toClient, p);
+            }
+        }
+
     }
 }

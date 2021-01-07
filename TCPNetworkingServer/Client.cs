@@ -147,7 +147,7 @@ namespace TCPNetworkingServer
 
         private void Disconnect()
         {
-            Console.WriteLine($"{tcp.socket.Client.RemoteEndPoint} has disconnected");
+            Console.WriteLine($"{username} has disconnected");
 
             tcp.Disconnect();
             ServerSend.SendDisconnect(id);

@@ -9,36 +9,32 @@ namespace TCPNetworkingServer
 {
     class ServerHandle
     {
-        public static void InitReceived(int fromClient, Packet packet)
+        public static void ReceiveInit(int fromClient, Packet p)
         {
-            int clientCheck = packet.ReadInt();
-            string clientUsername = packet.ReadString();
-            Server.clients[fromClient].username = clientUsername;
+            int checkId = p.ReadInt();
+            string username = p.ReadString();
 
-            Console.WriteLine($"Client {fromClient} answered init call with Username: {clientUsername}");
+            Server.clients[fromClient].username = username;
+            Console.WriteLine($"{username} with Client ID: {fromClient} joined the server");
             ServerSend.SendLogin(fromClient);
-            ServerSend.SendAllLogins(fromClient);
-            ServerSend.SendOtherLogin(fromClient);
 
-            if(clientCheck != fromClient)
+            if(checkId != fromClient)
             {
-                Console.WriteLine($"Client {fromClient} ({clientUsername}) has assumed the wrong ID ({clientCheck})!");
+                Console.WriteLine($"Client {username} ({fromClient}) has assumed the wrong client ID ({checkId})!");
             }
         }
 
-        public static void StringReceived(int fromClient, Packet packet)
+        public static void ReceiveMessage(int fromClient, Packet p)
         {
-            string msg = packet.ReadString();
-
-            Console.WriteLine($"{Server.clients[fromClient].username} ({fromClient}) sent: {msg}");
-            Console.WriteLine("Passing on");
-            ServerSend.SendString($"{Server.clients[fromClient].username}: {msg}", fromClient);
+            string msg = p.ReadString();
+            Console.WriteLine($"{Server.clients[fromClient].username} sent: {msg}");
+            ServerSend.SendMessage(fromClient, msg);
         }
 
-
-        public static void ProfilePictureReceived(int fromClient, Packet packet)
+        public static void ReceivePrivateMessage(int fromClient, Packet p)
         {
-            ServerSend.SendProfilePicure(fromClient, packet);
+            int toClient = p.ReadInt();
+            ServerSend.SendPrivateMessage(fromClient, toClient, p);
         }
     }
 }

@@ -10,7 +10,7 @@ namespace TCPNetworkingClientUI
 {
     class ClientHandle
     {
-        public static Action<string> onReceive;
+        public static Action<int, string> onReceive;
         public static Action<Image> onImageReceive;
         public static void ReceiveInit(Packet packet)
         {
@@ -18,52 +18,45 @@ namespace TCPNetworkingClientUI
 
             Client.instance.myid = myid;
             Console.WriteLine("init received");
-            ClientSend.InitReceived();
-        }
-
-        public static void ReceiveString(Packet packet)
-        {
-            string msg = packet.ReadString();
-            Console.WriteLine(msg);
-            onReceive(msg);
+            //Return init packet with username and profile picture
+            ClientSend.SendInit();
         }
 
         public static void ReceiveLogin(Packet packet)
         {
+            int id = packet.ReadInt();
+            string username = packet.ReadString();
+            bool newLogin = packet.ReadBool();
+            //Add client to list
+            OtherClient.init(username, id, newLogin);
+        }
+
+        public static void ReceiveMessage(Packet packet)
+        {
+            int id = packet.ReadInt();
             string msg = packet.ReadString();
-            Console.WriteLine(msg);
-            onReceive(msg);
+
+            onReceive(id, msg);
+        }
+
+        public static void ReceiveDisconnect(Packet packet)
+        {
+            int id = packet.ReadInt();
+            //Remove client from list
+            OtherClient.otherClients[id].Disconnect();
         }
 
         public static void Ping(Packet packet)
         {
         }
 
-        public static void ProfilePictureReceived(Packet p)
+        public static void ReceivePrivateMessage(Packet packet)
         {
-            int client = p.ReadInt();
-            byte[] data = p.ReadBytes(p.UnreadLength());
-            using (var ms = new MemoryStream(data))
-            {
-                Image i = Image.FromStream(ms);
-                OtherClient.otherClients[client].profilePicture = i;
-                onImageReceive(i);
-            }
+            int fromClient = packet.ReadInt();
+            string msg = packet.ReadString();
+            Console.WriteLine($"Received private message from {fromClient}: {msg}");
+            OtherClient.otherClients[fromClient].AppendToChat($"{OtherClient.otherClients[fromClient].username}: {msg}");
         }
 
-        public static void OtherLoginReceived(Packet p)
-        {           
-            int id = p.ReadInt();
-            string username = p.ReadString();
-            OtherClient.init(username, id);
-            ClientSend.SendProfilePicture();
-        }
-
-        public static void DisconnectReceived(Packet p)
-        {
-            int id = p.ReadInt();
-            ChatUI.instance.onReceive($"{OtherClient.otherClients[id].username} Disconnected!");
-            OtherClient.otherClients[id].Disconnect();
-        }
     }
 }

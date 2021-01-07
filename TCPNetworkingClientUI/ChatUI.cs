@@ -25,20 +25,24 @@ namespace TCPNetworkingClientUI
             Port.Click += ColorChange;
             ConnectButton.Click += Connect;
             SendButton.Click += Send;
-            Connections.SelectedIndexChanged += onConnectionSelectionChange;
             Connections.KeyPress += CancelEdit;
-            ProfilePictureBrowse.Click += BrowseForPicture;
+            PrivateSendButton.Click += PrivateChatSend;
 
             Port.KeyPress += new KeyPressEventHandler(AllowOnlyNums);
 
             Client.onConnect += onConnect;
 
             ClientHandle.onReceive += onReceive;
-            ClientHandle.onImageReceive += onImageReceive;
 
             OtherClient.onDisconnect += onClientDisconnect;
             OtherClient.onLogin += onClientLogin;
+            OtherClient.UpdateChat += UpdateChat;
             Client.onDisconnect += onDisconnect;
+
+            Connections.SelectedIndexChanged += onPrivateChatChange;
+
+            UserInput.KeyPress += CheckEnter;
+            PrivateUserInput.KeyPress += CheckEnter;
 
             SendButton.Enabled = false;
             UserInput.Enabled = false;
@@ -49,11 +53,27 @@ namespace TCPNetworkingClientUI
             
         }
 
+        private void CheckEnter(object sender, KeyPressEventArgs e)
+        {
+            int code = Encoding.ASCII.GetBytes(e.KeyChar.ToString())[0];
+            if (code == 13)
+            {
+                e.Handled = true;
+                TextBox tb = ((TextBox) sender);
+                Send(tb.Equals(UserInput));
+            }
+        }
+
         private void LoadSave(Save s)
         {
             IP.Text = s.adress;
             Port.Text = s.port;
             Username.Text = s.Username;
+        }
+
+        private void PrivateChatSend(object sender, EventArgs e)
+        {
+            Send(false);
         }
 
         private void CancelEdit(object sender, KeyPressEventArgs e)
@@ -86,53 +106,75 @@ namespace TCPNetworkingClientUI
             return s;
         }
 
-        private void onConnectionSelectionChange(object sender, EventArgs e)
+        public void onPrivateChatChange(object sender, EventArgs e)
         {
-            ListBox lb = (ListBox) sender;
-            if (lb.SelectedItem == null)
+
+            if (Connections.SelectedItem == null)
                 return;
-            TestPicture.Image = OtherClient.otherClientsUsername[(string)lb.SelectedItem].profilePicture;
+            string chat = OtherClient.otherClientsUsername[(string) Connections.SelectedItem].chat;
+            PrivateChat.Text = chat;
         }
 
-        public void onImageReceive(Image image)
+        private void UpdateChat()
         {
-            TestPicture.Image = image;
-            TestPicture.SizeMode = PictureBoxSizeMode.Zoom;
-        }
-
-        public void onReceive(string msg)
-        {
-            Message.Invoke(new Action(() => 
+            instance.Invoke(new Action(() =>
             {
-                Messages.Text += $"{msg}" + System.Environment.NewLine;
+                instance.onPrivateChatChange(null, null);
             }));
         }
 
-        public void onClientLogin(string username)
+        public void onReceive(int id, string msg)
         {
-            Connections.Invoke(new Action(() =>
-            {
-                Connections.Items.Add(username);
-            }));
+            string name = OtherClient.otherClients[id].username;
+            msg = $"{name}: {msg}";
+            WriteMessage(msg);
+        }
+
+        public void onClientLogin(string username, bool newLogin)
+        {
+            if (newLogin)
+                WriteMessage($"{username} logged in!");
+            if(username != Username.Text)
+                Connections.Invoke(new Action(() =>
+                {
+                    Connections.Items.Add(username);
+                }));
         }
 
         public void onDisconnect()
         {
             OtherClient.otherClients.Clear();
             OtherClient.otherClientsUsername.Clear();
-            Connections.Invoke(new Action(() =>
-            {
-                Connections.Items.Clear();
-            }));
-            Messages.Invoke(new Action(() => 
-            {
-                Messages.Text = "";
-            }));
-            ConnectButton.Text = "Connect";
+            instance.Invoke(new Action(() => instance.ReEnable()));
+        }
 
+        private void WriteMessage(string msg)
+        {
+            Messages.Invoke(new Action(() =>
+            {
+                Messages.AppendText(msg + System.Environment.NewLine);                
+            }));
+        }
+
+        private void ReEnable()
+        {
+            Connections.Items.Clear();
+            Messages.Text = "";
+            ConnectButton.Text = "Connect";
             SendButton.Enabled = false;
             UserInput.Enabled = false;
-            ProfilePictureBrowse.Enabled = true;
+            Port.Enabled = true;
+            IP.Enabled = true;
+            Username.Enabled = true;
+        }
+
+        private void Disable()
+        {
+            SendButton.Enabled = true;
+            UserInput.Enabled = true;
+            Port.Enabled = false;
+            IP.Enabled = false;
+            Username.Enabled = false;
         }
 
         public void onClientDisconnect(string username)
@@ -140,6 +182,7 @@ namespace TCPNetworkingClientUI
             Connections.Invoke(new Action(() =>
             {
                 Connections.Items.Remove(username);
+                WriteMessage($"{username} disconnected!");
             }));
         }
 
@@ -156,15 +199,33 @@ namespace TCPNetworkingClientUI
 
         private void Send(object sender, EventArgs e)
         {
-            if (Connected && !string.IsNullOrWhiteSpace(UserInput.Text))
+            //Its kinda weird
+            Send(true);
+        }
+
+        private void Send(bool chat)
+        {
+            if (string.IsNullOrWhiteSpace(UserInput.Text) && chat)
+                return;
+            if (string.IsNullOrWhiteSpace(PrivateUserInput.Text) && !chat)
+                return;
+            if (Connected)
             {
-                ClientSend.SendString(UserInput.Text);
-                Messages.Text += $"(You) {UserInput.Text}";
-                Messages.Text += System.Environment.NewLine;
-            } else
-            {
-                Messages.Text += $"(You) {UserInput.Text}";
-                Messages.Text += System.Environment.NewLine;
+                if (chat)
+                {
+                    ClientSend.SendMessage(UserInput.Text);
+                    WriteMessage($"(You) {UserInput.Text}");
+                    UserInput.Text = "";
+                } else
+                {
+                    if (Connections.SelectedItem == null)
+                        return;
+                    OtherClient current = OtherClient.otherClientsUsername[(string) Connections.SelectedItem];
+                    string msg = PrivateUserInput.Text + System.Environment.NewLine;
+                    ClientSend.SendPrivateMessage(current.id, msg);
+                    current.AppendToChat("(You) " + msg);
+                    PrivateUserInput.Text = "";
+                }
             }
         }
 
@@ -202,13 +263,7 @@ namespace TCPNetworkingClientUI
                 Client.instance.port = Int32.Parse(Port.Text);
                 Client.instance.tcp.Connect();
 
-                SendButton.Enabled = true;
-                UserInput.Enabled = true;
-                ProfilePictureBrowse.Enabled = false;
-                if (!UseProfile.Checked && selectedProfilePicturePath != null)
-                    profilePicture = Image.FromFile(@selectedProfilePicturePath);
-                else
-                    profilePicture = Image.FromFile(@defaultProfilePicturePath);
+                Disable();
                 ConnectButton.Text = "Disconnect";
             } else
             {

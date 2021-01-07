@@ -41,11 +41,10 @@ namespace TCPNetworkingClientUI
             this.Message = new System.Windows.Forms.Label();
             this.UserInput = new System.Windows.Forms.TextBox();
             this.Messages = new System.Windows.Forms.TextBox();
-            this.TestPicture = new System.Windows.Forms.PictureBox();
             this.Connections = new System.Windows.Forms.ListBox();
-            this.ProfilePictureBrowse = new System.Windows.Forms.Button();
-            this.UseProfile = new System.Windows.Forms.CheckBox();
-            ((System.ComponentModel.ISupportInitialize)(this.TestPicture)).BeginInit();
+            this.PrivateChat = new System.Windows.Forms.TextBox();
+            this.PrivateUserInput = new System.Windows.Forms.TextBox();
+            this.PrivateSendButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // IP
@@ -67,7 +66,7 @@ namespace TCPNetworkingClientUI
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(56, 66);
+            this.label2.Location = new System.Drawing.Point(56, 55);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(55, 30);
             this.label2.TabIndex = 3;
@@ -75,14 +74,14 @@ namespace TCPNetworkingClientUI
             // 
             // Port
             // 
-            this.Port.Location = new System.Drawing.Point(121, 63);
+            this.Port.Location = new System.Drawing.Point(121, 52);
             this.Port.Name = "Port";
             this.Port.Size = new System.Drawing.Size(100, 35);
             this.Port.TabIndex = 4;
             // 
             // ConnectButton
             // 
-            this.ConnectButton.Location = new System.Drawing.Point(107, 145);
+            this.ConnectButton.Location = new System.Drawing.Point(109, 134);
             this.ConnectButton.Name = "ConnectButton";
             this.ConnectButton.Size = new System.Drawing.Size(126, 38);
             this.ConnectButton.TabIndex = 5;
@@ -92,7 +91,7 @@ namespace TCPNetworkingClientUI
             // PortError
             // 
             this.PortError.AutoSize = true;
-            this.PortError.Location = new System.Drawing.Point(227, 66);
+            this.PortError.Location = new System.Drawing.Point(227, 55);
             this.PortError.Name = "PortError";
             this.PortError.Size = new System.Drawing.Size(188, 30);
             this.PortError.TabIndex = 6;
@@ -100,16 +99,16 @@ namespace TCPNetworkingClientUI
             // 
             // SendButton
             // 
-            this.SendButton.Location = new System.Drawing.Point(713, 394);
+            this.SendButton.Location = new System.Drawing.Point(713, 406);
             this.SendButton.Name = "SendButton";
-            this.SendButton.Size = new System.Drawing.Size(105, 64);
+            this.SendButton.Size = new System.Drawing.Size(97, 41);
             this.SendButton.TabIndex = 7;
             this.SendButton.Text = "Send";
             this.SendButton.UseVisualStyleBackColor = true;
             // 
             // Username
             // 
-            this.Username.Location = new System.Drawing.Point(121, 104);
+            this.Username.Location = new System.Drawing.Point(121, 93);
             this.Username.Name = "Username";
             this.Username.Size = new System.Drawing.Size(100, 35);
             this.Username.TabIndex = 8;
@@ -117,7 +116,7 @@ namespace TCPNetworkingClientUI
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(4, 107);
+            this.label3.Location = new System.Drawing.Point(0, 96);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(111, 30);
             this.label3.TabIndex = 9;
@@ -149,53 +148,50 @@ namespace TCPNetworkingClientUI
             this.Messages.Size = new System.Drawing.Size(337, 350);
             this.Messages.TabIndex = 13;
             // 
-            // TestPicture
-            // 
-            this.TestPicture.Location = new System.Drawing.Point(80, 248);
-            this.TestPicture.Name = "TestPicture";
-            this.TestPicture.Size = new System.Drawing.Size(168, 166);
-            this.TestPicture.TabIndex = 14;
-            this.TestPicture.TabStop = false;
-            // 
             // Connections
             // 
             this.Connections.FormattingEnabled = true;
             this.Connections.ItemHeight = 30;
-            this.Connections.Location = new System.Drawing.Point(295, 248);
+            this.Connections.Location = new System.Drawing.Point(295, 105);
             this.Connections.Name = "Connections";
-            this.Connections.Size = new System.Drawing.Size(120, 154);
+            this.Connections.Size = new System.Drawing.Size(120, 364);
             this.Connections.TabIndex = 16;
             // 
-            // ProfilePictureBrowse
+            // PrivateChat
             // 
-            this.ProfilePictureBrowse.Location = new System.Drawing.Point(109, 420);
-            this.ProfilePictureBrowse.Name = "ProfilePictureBrowse";
-            this.ProfilePictureBrowse.Size = new System.Drawing.Size(112, 43);
-            this.ProfilePictureBrowse.TabIndex = 17;
-            this.ProfilePictureBrowse.Text = "Browse";
-            this.ProfilePictureBrowse.UseVisualStyleBackColor = true;
+            this.PrivateChat.Location = new System.Drawing.Point(5, 178);
+            this.PrivateChat.Multiline = true;
+            this.PrivateChat.Name = "PrivateChat";
+            this.PrivateChat.ReadOnly = true;
+            this.PrivateChat.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.PrivateChat.Size = new System.Drawing.Size(277, 291);
+            this.PrivateChat.TabIndex = 17;
             // 
-            // UseProfile
+            // PrivateUserInput
             // 
-            this.UseProfile.AutoSize = true;
-            this.UseProfile.Checked = true;
-            this.UseProfile.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.UseProfile.Location = new System.Drawing.Point(109, 469);
-            this.UseProfile.Name = "UseProfile";
-            this.UseProfile.Size = new System.Drawing.Size(100, 34);
-            this.UseProfile.TabIndex = 18;
-            this.UseProfile.Text = "Default";
-            this.UseProfile.UseVisualStyleBackColor = true;
+            this.PrivateUserInput.Location = new System.Drawing.Point(5, 477);
+            this.PrivateUserInput.Name = "PrivateUserInput";
+            this.PrivateUserInput.Size = new System.Drawing.Size(277, 35);
+            this.PrivateUserInput.TabIndex = 18;
+            // 
+            // PrivateSendButton
+            // 
+            this.PrivateSendButton.Location = new System.Drawing.Point(295, 475);
+            this.PrivateSendButton.Name = "PrivateSendButton";
+            this.PrivateSendButton.Size = new System.Drawing.Size(97, 41);
+            this.PrivateSendButton.TabIndex = 19;
+            this.PrivateSendButton.Text = "Send";
+            this.PrivateSendButton.UseVisualStyleBackColor = true;
             // 
             // ChatUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 30F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(877, 514);
-            this.Controls.Add(this.UseProfile);
-            this.Controls.Add(this.ProfilePictureBrowse);
+            this.ClientSize = new System.Drawing.Size(877, 524);
+            this.Controls.Add(this.PrivateSendButton);
+            this.Controls.Add(this.PrivateUserInput);
+            this.Controls.Add(this.PrivateChat);
             this.Controls.Add(this.Connections);
-            this.Controls.Add(this.TestPicture);
             this.Controls.Add(this.Messages);
             this.Controls.Add(this.UserInput);
             this.Controls.Add(this.Message);
@@ -212,7 +208,6 @@ namespace TCPNetworkingClientUI
             this.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
             this.Name = "ChatUI";
             this.Text = "ChatUI";
-            ((System.ComponentModel.ISupportInitialize)(this.TestPicture)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -232,9 +227,9 @@ namespace TCPNetworkingClientUI
         private System.Windows.Forms.Label Message;
         private System.Windows.Forms.TextBox UserInput;
         private System.Windows.Forms.TextBox Messages;
-        private System.Windows.Forms.PictureBox TestPicture;
         private System.Windows.Forms.ListBox Connections;
-        private System.Windows.Forms.Button ProfilePictureBrowse;
-        private System.Windows.Forms.CheckBox UseProfile;
+        private System.Windows.Forms.TextBox PrivateChat;
+        private System.Windows.Forms.TextBox PrivateUserInput;
+        private System.Windows.Forms.Button PrivateSendButton;
     }
 }
