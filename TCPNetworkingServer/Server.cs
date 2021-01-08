@@ -21,6 +21,7 @@ namespace TCPNetworkingServer
             private set;
         }
 
+        public static List<string> usernames = new List<string>();
         private static TcpListener tcpListener;
         public static Dictionary<int, Client> clients = new Dictionary<int, Client>();
 
@@ -81,7 +82,8 @@ namespace TCPNetworkingServer
             {
                 {(int)ClientPackets.initReceived, ServerHandle.ReceiveInit },
                 {(int)ClientPackets.messageReceived, ServerHandle.ReceiveMessage },
-                {(int)ClientPackets.privateMessageReceived, ServerHandle.ReceivePrivateMessage }
+                {(int)ClientPackets.privateMessageReceived, ServerHandle.ReceivePrivateMessage },
+                {(int)ClientPackets.audioMessageReceived, ServerHandle.ReceiveAudioMessage }
             };
 
             Console.WriteLine("Initialized Packets");

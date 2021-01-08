@@ -12,7 +12,8 @@ namespace TCPNetworkingServer
         sendLogin,
         sendMessage,
         sendPrivateMessage,
-        disconnect
+        disconnect,
+        sendAudioMessage
     }
 
     /// <summary>Sent from client to server.</summary>
@@ -20,7 +21,8 @@ namespace TCPNetworkingServer
     {
         initReceived,
         messageReceived,
-        privateMessageReceived
+        privateMessageReceived,
+        audioMessageReceived
     }
 
     public class Packet:IDisposable

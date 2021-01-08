@@ -98,5 +98,16 @@ namespace TCPNetworkingServer
             }
         }
 
+        public static void SendAudioMessage(int fromClient, byte[] data, string msg)
+        {
+            using (Packet p = new Packet((int) ServerPackets.sendAudioMessage))
+            {
+                p.Write(fromClient);
+                p.Write(msg);
+                p.Write(data);
+                SendTCPDataToAll(p);
+            }
+        }
+
     }
 }

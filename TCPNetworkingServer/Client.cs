@@ -148,7 +148,7 @@ namespace TCPNetworkingServer
         private void Disconnect()
         {
             Console.WriteLine($"{username} has disconnected");
-
+            Server.usernames.Remove(username);
             tcp.Disconnect();
             ServerSend.SendDisconnect(id);
             Server.clients[id] = new Client(id);
