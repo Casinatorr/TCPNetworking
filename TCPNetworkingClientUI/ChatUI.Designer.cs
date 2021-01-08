@@ -45,6 +45,9 @@ namespace TCPNetworkingClientUI
             this.PrivateChat = new System.Windows.Forms.TextBox();
             this.PrivateUserInput = new System.Windows.Forms.TextBox();
             this.PrivateSendButton = new System.Windows.Forms.Button();
+            this.RecordingButton = new System.Windows.Forms.Button();
+            this.PlayAudio = new System.Windows.Forms.Button();
+            this.LastAudioMessage = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // IP
@@ -183,11 +186,40 @@ namespace TCPNetworkingClientUI
             this.PrivateSendButton.Text = "Send";
             this.PrivateSendButton.UseVisualStyleBackColor = true;
             // 
+            // RecordingButton
+            // 
+            this.RecordingButton.Location = new System.Drawing.Point(816, 408);
+            this.RecordingButton.Name = "RecordingButton";
+            this.RecordingButton.Size = new System.Drawing.Size(103, 37);
+            this.RecordingButton.TabIndex = 21;
+            this.RecordingButton.Text = "Record";
+            this.RecordingButton.UseVisualStyleBackColor = true;
+            // 
+            // PlayAudio
+            // 
+            this.PlayAudio.Location = new System.Drawing.Point(713, 465);
+            this.PlayAudio.Name = "PlayAudio";
+            this.PlayAudio.Size = new System.Drawing.Size(90, 36);
+            this.PlayAudio.TabIndex = 23;
+            this.PlayAudio.Text = "Play";
+            this.PlayAudio.UseVisualStyleBackColor = true;
+            // 
+            // LastAudioMessage
+            // 
+            this.LastAudioMessage.Location = new System.Drawing.Point(447, 466);
+            this.LastAudioMessage.Name = "LastAudioMessage";
+            this.LastAudioMessage.ReadOnly = true;
+            this.LastAudioMessage.Size = new System.Drawing.Size(260, 35);
+            this.LastAudioMessage.TabIndex = 24;
+            // 
             // ChatUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 30F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(877, 524);
+            this.ClientSize = new System.Drawing.Size(936, 524);
+            this.Controls.Add(this.LastAudioMessage);
+            this.Controls.Add(this.PlayAudio);
+            this.Controls.Add(this.RecordingButton);
             this.Controls.Add(this.PrivateSendButton);
             this.Controls.Add(this.PrivateUserInput);
             this.Controls.Add(this.PrivateChat);
@@ -231,5 +263,8 @@ namespace TCPNetworkingClientUI
         private System.Windows.Forms.TextBox PrivateChat;
         private System.Windows.Forms.TextBox PrivateUserInput;
         private System.Windows.Forms.Button PrivateSendButton;
+        private System.Windows.Forms.Button RecordingButton;
+        private System.Windows.Forms.Button PlayAudio;
+        private System.Windows.Forms.TextBox LastAudioMessage;
     }
 }

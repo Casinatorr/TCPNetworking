@@ -47,5 +47,15 @@ namespace TCPNetworkingClientUI
             }
         }
 
+        public static void SendAudioMessage(string msg, byte[] data)
+        {
+            using(Packet p = new Packet((int) ClientPackets.sendAudioMessage))
+            {
+                p.Write(msg);
+                p.Write(data);
+                SendTCPData(p);              
+            }
+        }
+
     }
 }

@@ -12,7 +12,8 @@ namespace TCPNetworkingClientUI
         receivedLogin,
         receivedMessage,
         receivedPrivateMessage,
-        receivedDisconnect
+        receivedDisconnect,
+        receivedAudioMessage
     }
 
     /// <summary>Sent from client to server.</summary>
@@ -20,7 +21,8 @@ namespace TCPNetworkingClientUI
     {
         init,
         sendMessage,
-        sendPrivateMessage
+        sendPrivateMessage,
+        sendAudioMessage
     }
 
     public class Packet:IDisposable

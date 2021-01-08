@@ -10,23 +10,20 @@ namespace TCPNetworkingClientUI
     class OtherClient
     {
         public static Dictionary<int, OtherClient> otherClients = new Dictionary<int, OtherClient>();
-        public static Dictionary<string, OtherClient> otherClientsUsername = new Dictionary<string, OtherClient>();
         public static Action<string> onDisconnect;
-        public static Action<string, bool> onLogin;
+        public static Action<int, bool> onLogin;
         public static Action UpdateChat;
 
         public string chat = "";
         public string username;
         public int id;
-        public Image profilePicture;
 
         public OtherClient(string username, int id, bool newLogin)
         {
             this.id = id;
             this.username = username;
             otherClients.Add(id, this);
-            otherClientsUsername.Add(username, this);
-            onLogin(username, newLogin);
+            onLogin(id, newLogin);
         }
         public static void init(string username, int id, bool newLogin)
         {
@@ -38,7 +35,6 @@ namespace TCPNetworkingClientUI
         public void Disconnect()
         {
             otherClients.Remove(id);
-            otherClientsUsername.Remove(username);
             onDisconnect(username);
         }
 
@@ -47,5 +43,16 @@ namespace TCPNetworkingClientUI
             chat += msg;
             UpdateChat();
         }
+
+        public static OtherClient byUsername(string username)
+        {
+            foreach(KeyValuePair<int, OtherClient> kv in otherClients)
+            {
+                if (kv.Value.username == username)
+                    return kv.Value;
+            }
+            return null;
+        }
+
     }
 }

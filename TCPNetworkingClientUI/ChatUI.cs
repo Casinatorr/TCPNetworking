@@ -3,6 +3,10 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.Text.RegularExpressions;
+using TCPNetworkingClientUI.Audio;
+using NAudio.Wave;
+using System.IO;
+using System.Threading;
 
 namespace TCPNetworkingClientUI
 {
@@ -12,10 +16,14 @@ namespace TCPNetworkingClientUI
         private bool Connected = false;
         public static string username;
         public static ChatUI instance;
+        public byte[] lastAudio;
 
-        private static string defaultProfilePicturePath = $"{AppDomain.CurrentDomain.BaseDirectory}AimcrossRed.png";
-        public static Image profilePicture = Image.FromFile(@defaultProfilePicturePath);
-        private string selectedProfilePicturePath;
+        public Recorder recorder;
+        private bool isRecording = false;
+        private Audio.Encoder encoder;
+
+        private Packet currentAudio;
+
         public ChatUI(Save lastSave)
         {
             InitializeComponent();
@@ -27,6 +35,10 @@ namespace TCPNetworkingClientUI
             SendButton.Click += Send;
             Connections.KeyPress += CancelEdit;
             PrivateSendButton.Click += PrivateChatSend;
+            encoder = new Audio.Encoder();
+            recorder = new Recorder();
+            RecordingButton.Click += Record;
+            PlayAudio.Click += HandleSound;
 
             Port.KeyPress += new KeyPressEventHandler(AllowOnlyNums);
 
@@ -46,6 +58,8 @@ namespace TCPNetworkingClientUI
 
             SendButton.Enabled = false;
             UserInput.Enabled = false;
+            RecordingButton.Enabled = false;
+            PlayAudio.Enabled = false;
 
             instance = this;
             LoadSave(lastSave);
@@ -53,6 +67,44 @@ namespace TCPNetworkingClientUI
             
         }
 
+        //Testing
+        public void Record(object sender, EventArgs e)
+        {
+            if (!isRecording)
+            {
+                recorder.StartRecording();
+                isRecording = true;
+                RecordingButton.Text = "Stop";
+            } else
+            {
+                RecordingButton.Enabled = false;
+                isRecording = false;
+                Packet p = recorder.StopRecording();
+                currentAudio = p;
+            }
+        }
+
+        public void SetAudioMessage(string msg)
+        {
+            LastAudioMessage.Text = msg;
+            PlayAudio.Enabled = true;
+        }
+
+        public void HandleSound(object sender, EventArgs e)
+        {
+            if (lastAudio == null)
+                return;
+            byte[] data = lastAudio;
+            data = encoder.Decode(data, 0, data.Length);
+            IWaveProvider provider = new RawSourceWaveStream(
+                         new MemoryStream(data), new WaveFormat());
+
+            WaveOut wo = new WaveOut();
+            wo.Init(provider);
+            wo.Play();
+        }
+
+        //calling textboxes trigger something by pressing Enter
         private void CheckEnter(object sender, KeyPressEventArgs e)
         {
             int code = Encoding.ASCII.GetBytes(e.KeyChar.ToString())[0];
@@ -64,6 +116,7 @@ namespace TCPNetworkingClientUI
             }
         }
 
+        //enters saved values into fields
         private void LoadSave(Save s)
         {
             IP.Text = s.adress;
@@ -71,32 +124,19 @@ namespace TCPNetworkingClientUI
             Username.Text = s.Username;
         }
 
+        //sends private chat message
         private void PrivateChatSend(object sender, EventArgs e)
         {
             Send(false);
         }
 
+        //completely cancel interaction with listboxes/textboxes
         private void CancelEdit(object sender, KeyPressEventArgs e)
         {
             e.Handled = true;
         }
 
-        private void BrowseForPicture(object sender, EventArgs e)
-        {
-            using(OpenFileDialog ofd = new OpenFileDialog())
-            {
-                ofd.InitialDirectory = "c:\\";
-                ofd.Filter = "png files (*.png) | *.png";
-                ofd.FilterIndex = 2;
-                ofd.RestoreDirectory = true;
-
-                if(ofd.ShowDialog() == DialogResult.OK)
-                {
-                    selectedProfilePicturePath = ofd.FileName;
-                }
-            }
-        }
-
+        //returns current saveable values
         public Save getSave()
         {
             Save s = new Save();
@@ -106,15 +146,17 @@ namespace TCPNetworkingClientUI
             return s;
         }
 
+        //gets called when user changes private chat
         public void onPrivateChatChange(object sender, EventArgs e)
         {
 
             if (Connections.SelectedItem == null)
                 return;
-            string chat = OtherClient.otherClientsUsername[(string) Connections.SelectedItem].chat;
+            string chat = OtherClient.byUsername((string)Connections.SelectedItem).chat;
             PrivateChat.Text = chat;
         }
 
+        //Updates the currently open private chat
         private void UpdateChat()
         {
             instance.Invoke(new Action(() =>
@@ -123,6 +165,7 @@ namespace TCPNetworkingClientUI
             }));
         }
 
+        //gets called on receive
         public void onReceive(int id, string msg)
         {
             string name = OtherClient.otherClients[id].username;
@@ -130,24 +173,26 @@ namespace TCPNetworkingClientUI
             WriteMessage(msg);
         }
 
-        public void onClientLogin(string username, bool newLogin)
+        //gets called by ServerHandle when a login packet arrives, newLogin is for identification purposes
+        public void onClientLogin(int id, bool newLogin)
         {
             if (newLogin)
-                WriteMessage($"{username} logged in!");
-            if(username != Username.Text)
+                WriteMessage($"{OtherClient.otherClients[id].username} logged in!");
+            if(id != Client.instance.myid)
                 Connections.Invoke(new Action(() =>
                 {
-                    Connections.Items.Add(username);
+                    Connections.Items.Add(OtherClient.otherClients[id].username);
                 }));
         }
 
+        //gets called when the client disconnects
         public void onDisconnect()
         {
             OtherClient.otherClients.Clear();
-            OtherClient.otherClientsUsername.Clear();
             instance.Invoke(new Action(() => instance.ReEnable()));
         }
 
+        //invokes a call that changes the public chat box
         private void WriteMessage(string msg)
         {
             Messages.Invoke(new Action(() =>
@@ -156,6 +201,7 @@ namespace TCPNetworkingClientUI
             }));
         }
 
+        //enables buttons and textboxes
         private void ReEnable()
         {
             Connections.Items.Clear();
@@ -166,8 +212,13 @@ namespace TCPNetworkingClientUI
             Port.Enabled = true;
             IP.Enabled = true;
             Username.Enabled = true;
+            PrivateSendButton.Enabled = false;
+            PrivateUserInput.Enabled = false;
+            PlayAudio.Enabled = false;
+            RecordingButton.Enabled = false;
         }
 
+        //disables buttons and textboxes
         private void Disable()
         {
             SendButton.Enabled = true;
@@ -175,8 +226,12 @@ namespace TCPNetworkingClientUI
             Port.Enabled = false;
             IP.Enabled = false;
             Username.Enabled = false;
+            PrivateUserInput.Enabled = true;
+            PrivateSendButton.Enabled = true;
+            RecordingButton.Enabled = true;
         }
 
+        //gets called when an OtherClients disconnect method gets called
         public void onClientDisconnect(string username)
         {
             Connections.Invoke(new Action(() =>
@@ -186,6 +241,7 @@ namespace TCPNetworkingClientUI
             }));
         }
 
+        //allows only numbers in called textboxes
         private void AllowOnlyNums(object sender, KeyPressEventArgs e)
         {
             char[] c = { e.KeyChar };
@@ -197,20 +253,30 @@ namespace TCPNetworkingClientUI
                 e.Handled = true;
         }
 
+        //gets called by send button, calls the other send function
         private void Send(object sender, EventArgs e)
         {
             //Its kinda weird
             Send(true);
         }
 
+        //Send public and private messages, boolean tells which type of message
         private void Send(bool chat)
         {
-            if (string.IsNullOrWhiteSpace(UserInput.Text) && chat)
-                return;
-            if (string.IsNullOrWhiteSpace(PrivateUserInput.Text) && !chat)
-                return;
             if (Connected)
             {
+                RecordingButton.Enabled = true;
+                RecordingButton.Text = "Record";
+                if (currentAudio != null)
+                {
+                    ClientSend.SendAudioMessage(UserInput.Text, currentAudio.ReadBytes(currentAudio.Length()));
+                    currentAudio = null;
+                    UserInput.Text = "";
+                }
+                if (string.IsNullOrWhiteSpace(UserInput.Text) && chat)
+                    return;
+                if (string.IsNullOrWhiteSpace(PrivateUserInput.Text) && !chat)
+                    return;
                 if (chat)
                 {
                     ClientSend.SendMessage(UserInput.Text);
@@ -220,7 +286,7 @@ namespace TCPNetworkingClientUI
                 {
                     if (Connections.SelectedItem == null)
                         return;
-                    OtherClient current = OtherClient.otherClientsUsername[(string) Connections.SelectedItem];
+                    OtherClient current = OtherClient.byUsername((string)Connections.SelectedItem);
                     string msg = PrivateUserInput.Text + System.Environment.NewLine;
                     ClientSend.SendPrivateMessage(current.id, msg);
                     current.AppendToChat("(You) " + msg);
@@ -229,6 +295,7 @@ namespace TCPNetworkingClientUI
             }
         }
 
+        //Connecting
         private void Connect(object sender, EventArgs e)
         {
             bool valid = true;
@@ -273,13 +340,14 @@ namespace TCPNetworkingClientUI
             }
         }
 
+        //connect callback from client class
         private void onConnect(bool success)
         {
             UseWaitCursor = false;
             Connected = success;
         }
 
-
+        //calling textboxes return to default color on click
         private void ColorChange(object sender, EventArgs args)
         {
             ((TextBox) sender).BackColor = Color.White;

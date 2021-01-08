@@ -11,7 +11,6 @@ namespace TCPNetworkingClientUI
     class ClientHandle
     {
         public static Action<int, string> onReceive;
-        public static Action<Image> onImageReceive;
         public static void ReceiveInit(Packet packet)
         {
             int myid = packet.ReadInt();
@@ -56,6 +55,18 @@ namespace TCPNetworkingClientUI
             string msg = packet.ReadString();
             Console.WriteLine($"Received private message from {fromClient}: {msg}");
             OtherClient.otherClients[fromClient].AppendToChat($"{OtherClient.otherClients[fromClient].username}: {msg}");
+        }
+
+        public static void ReceiveAudioMessage(Packet p)
+        {
+            int fromClient = p.ReadInt();
+            string msg = p.ReadString();
+            byte[] data = p.ReadBytes(p.UnreadLength());
+            ChatUI.instance.lastAudio = data;
+            ChatUI.instance.Invoke(new Action(() =>
+            {
+                ChatUI.instance.SetAudioMessage($"{OtherClient.otherClients[fromClient].username}: {msg}");
+            }));
         }
 
     }

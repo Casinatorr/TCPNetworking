@@ -25,7 +25,6 @@ namespace TCPNetworkingClientUI
 
         private delegate void PacketHandler(Packet _packet);
         private static Dictionary<int, PacketHandler> packetHandlers;
-
         public static Action onDisconnect;
 
         public Client()
@@ -189,7 +188,8 @@ namespace TCPNetworkingClientUI
             {(int)ServerPackets.receivedDisconnect, ClientHandle.ReceiveDisconnect },
             {(int)ServerPackets.receivedMessage, ClientHandle.ReceiveMessage },
             {(int)ServerPackets.receivedPrivateMessage, ClientHandle.ReceivePrivateMessage },
-            {(int)ServerPackets.ping, ClientHandle.Ping }
+            {(int)ServerPackets.ping, ClientHandle.Ping },
+            {(int)ServerPackets.receivedAudioMessage, ClientHandle.ReceiveAudioMessage}
         };
             Console.WriteLine("Initialized packets.");
         }
